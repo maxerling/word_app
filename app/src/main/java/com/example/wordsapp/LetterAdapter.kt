@@ -15,6 +15,7 @@
  */
 package com.example.wordsapp
 
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -22,13 +23,13 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Adapter for the [RecyclerView] in [MainActivity].
  */
-class LetterAdapter :
-    RecyclerView.Adapter<LetterAdapter.LetterViewHolder>() {
+class LetterAdapter : RecyclerView.Adapter<LetterAdapter.LetterViewHolder>() {
 
     // Generates a [CharRange] from 'A' to 'Z' and converts it to a list
     private val list = ('A').rangeTo('Z').toList()
@@ -36,13 +37,15 @@ class LetterAdapter :
     /**
      * Provides a reference for the views needed to display items in your list.
      */
-    class LetterViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val button = view.findViewById<Button>(R.id.button_item)
+    class LetterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val button: Button = view.findViewById(R.id.button_item)
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
+
+
 
     /**
      * Creates new views with R.layout.item_view as its template
@@ -60,8 +63,18 @@ class LetterAdapter :
      * Replaces the content of an existing view with new data
      */
     override fun onBindViewHolder(holder: LetterViewHolder, position: Int) {
-        val item = list.get(position)
+        val item = list[position]
         holder.button.text = item.toString()
+        holder.button.setOnClickListener(View.OnClickListener {  view ->
+            val intent = Intent(view.context,DetailActivity::class.java)
+            intent.putExtra(DetailActivity.LETTER,holder.button.text.toString())
+            view.context.startActivity(intent)
+
+        })
+
+
+
+
     }
 
     // Setup custom accessibility delegate to set the text read with
